@@ -286,7 +286,7 @@
 					</tr>
 					<tr>
 						<td>						
-							<input type="text" name="code" id="textfield" disabled="disabled" value="<?php echo $$cod_professor; ?>">																
+							<input type="text" name="code" id="textfield" disabled="disabled" value="<?php echo $cod_professor; ?>">																
 						</td>
 						<td>
 							<input type="text" name="nome_professor" id="textfield2" maxlength="120" value="<?php echo $nome_prof; ?>">
@@ -438,7 +438,7 @@
 						$nome_professor = $resultado_consulta_select_professor['nome_professor'];
 						$cpf_professor = $resultado_consulta_select_professor['cpf'];
 						$email_professor = $resultado_consulta_select_professor['email'];
-						$status_professor = $resultado_consulta_select_professor['status_professor'];
+						//$status_professor = $resultado_consulta_select_professor['status_professor'];
 					?>
 				  		<tr>
 							<td>
@@ -456,11 +456,11 @@
 							<td style="color: #A00C0E">								
 								<a href="professores.php?pg=professor&amp;op=visualizar&professor=<?php echo $cod_professor; ?>" ><img title="Visualizar o Professor <?php echo $nome_professor; ?>" src="img/lupa_turma.png" width="18" height="18" border="0"></a>
 								<a href="professores.php?pg=professor&amp;op=atualizar&professor=<?php echo $cod_professor; ?>"><img title="Atualizar o Professor <?php echo $nome_professor; ?>" src="img/editar.png" width="18" height="18" border="0"></a>
-								<?php if($status_professor == 0){ ?>
-									<a href="professores.php?pg=professor&amp;op=trocaStatus&func=ativa&professor=<?php echo $cod_professor; ?>"><img title="Ativar o Professor <?php echo $nome_professor; ?>" src="img/success.png" width="18" height="18" border="0"></a>
-								<?php } else { ?>
+								<?php // if($status_professor == 0){ ?>
+									<!--<a href="professores.php?pg=professor&amp;op=trocaStatus&func=ativa&professor=<?php echo $cod_professor; ?>"><img title="Ativar o Professor <?php echo $nome_professor; ?>" src="img/success.png" width="18" height="18" border="0"></a> -->
+								<?php //} else { ?>
 									<a href="professores.php?pg=professor&amp;op=trocaStatus&func=inativa&professor=<?php echo $cod_professor; ?>"><img title="Inativar o Professor <?php echo $nome_professor; ?>" src="img/error.png" width="18" height="18" border="0"></a>						
-								<?php } ?>	
+								<?php //} ?>	
 							</td>							
 				  		</tr>
 					<?php } ?>

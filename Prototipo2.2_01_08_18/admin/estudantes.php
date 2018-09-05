@@ -37,6 +37,69 @@
 
 		<?php if(@$_GET['pg'] == 'espera'){ ?>
 
+<!VISUALIZAR ESPERA>
+
+			<?php if(@$_GET['mod'] == 'visualiza'){?>
+		
+				<?php $cod_inscricao = $_GET['inscricao'];
+											   
+				$select_inscricao = "SELECT * FROM inscricao WHERE id_inscricao = '$cod_inscricao'";
+											   
+				$sql_select_inscricao = mysqli_query($conexao, $select_inscricao) or die(mysqli_error($conexao));
+											   
+				$select_inscricao_valores = mysqli_fetch_assoc($sql_select_inscricao);
+											   
+				$data_inscricao = $select_inscricao_valores['data_inscricao'];
+				$nome_inscricao = $select_inscricao_valores['nome_aluno'];
+				$sexo_inscricao = $select_inscricao_valores['sexo_aluno'];
+				$email_inscricao = $select_inscricao_valores['email'];
+				$telefone_inscricao = $select_inscricao_valores['telefone_responsavel'];
+				$celular_inscricao = $select_inscricao_valores['celular_responsavel'];?>
+				
+						
+			<br/>									
+				<table>
+					<tr>
+						<td colspan="2"><center><strong><i>Ficha de Inscrição</i></i></strong></center></td>
+					</tr>
+					<tr>
+						<td>Codígo de Inscrição</td>
+						<td>Data de Inscrição</td>							
+					</tr>
+					<tr>
+						<td><input style="width:70px" type="text" name="cod_inscricao" value="<?php echo $cod_inscricao;?>" disabled/></td>
+						<td><input style="width:145px" type="text" name="data_inscricao" value="<?php date_default_timezone_set("America/Sao_Paulo");
+							echo date('d/m/Y - H:i', strtotime($data_inscricao)); ?>" disabled/></td>							
+					</tr>
+					<tr>
+						<td colspan="2"><center><strong><i>Dados Pessoais</i></i></strong></center></td>
+					</tr>
+					<tr>
+						<td>Nome</td>
+						<td>Sexo</td>	
+					</tr>
+					<tr>						
+						<td><input style="width:400px" type="text" name="nome_aluno" value="<?php echo $nome_inscricao; ?>" maxlength="120" disabled/></td>
+						<td><input style="width: 145px" type="text" name="sexo_aluno" value="<?php echo $sexo_inscricao; ?>" disabled/></td>							
+					</tr>					
+					<tr>
+						<td colspan="3"><center><strong><i>Contato</i></i></strong></center></td>
+					</tr>
+					<tr>						
+						<td>E-mail</td>
+						<td>Telefone</td>
+						<td>Celular</td>
+					</tr>
+					<tr>						
+						<td><input style="width:400px" type="email" name="email" value="<?php echo $email_inscricao ;?>" disabled></td>
+						<td><input style="width:95px" type="text" name="telefone" maxlength="10" value="<?php echo $telefone_inscricao ;?> " disabled></td>
+						<td><input style="width:105px" type="text" name="celular" maxlength="11" value="<?php echo $celular_inscricao ;?>" disabled></td>
+					</tr>						
+				</table>				
+			<br/>				
+			<?php die;} ?>		
+<!>
+
 <!Editando na Lista de Espera>
 			<?php if(@$_GET['mod'] == 'edita'){ ?>
 				
@@ -142,7 +205,7 @@
 					<h1>Cadastrar Aluno para Lista de Espera</h1>
 
 					<?php if(isset($_POST['button'])){
-
+	
 						/*Problemas
 						$data_sem_formatacao = date("Y-m-d H:i:s");
 
@@ -278,7 +341,7 @@
 						<td>
 							<center><strong>Celular</strong></center>
 						</td>
-						<td width="100">
+						<td>
 							<center><strong>Modificar</strong></center>
 						</td>
 					</tr>
@@ -304,9 +367,18 @@
 							<td style="color: #A00C0E">
 								<center><?php echo $resultado_consulta_aluno_cadastrado_valores['celular_responsavel']; ?></center>
 							</td>
-							<td>
-								<center><a href="estudantes.php?pg=espera&amp;mod=edita&inscricao=<?php echo $resultado_consulta_aluno_cadastrado_valores['id_inscricao'];?>"><img title="Editar" src="img/editar.png" width="18" height="18" border="0"></a>
-								<a href="estudantes.php?pg=espera&amp;mod=deleta&inscricao=<?php echo $resultado_consulta_aluno_cadastrado_valores['id_inscricao']; ?>" ><img title="Excluir" src="img/deletar.ico" width="18" height="18" border="0"></a></center>								
+							<td style="color: #A00C0E">
+								<center>									
+									<a href="estudantes.php?pg=espera&amp;mod=visualiza&inscricao=<?php echo $resultado_consulta_aluno_cadastrado_valores['id_inscricao']; ?>" >
+										<img title="Visualizar" src="img/lupa_turma.png" width="18" height="18" border="0">
+									</a>
+									<a href="estudantes.php?pg=espera&amp;mod=edita&inscricao=<?php echo $resultado_consulta_aluno_cadastrado_valores['id_inscricao']; ?>">
+										<img title="Atualizar" src="img/editar.png" width="18" height="18" border="0">
+									</a>
+									<a href="estudantes.php?pg=espera&amp;mod=deleta&inscricao=<?php echo $resultado_consulta_aluno_cadastrado_valores['id_inscricao']; ?>">
+										<img title="Deletar" src="img/deletar.ico" width="18" height="18" border="0">
+									</a>
+								</center>								
 							</td>
 						</tr>
 					<?php } ?>
@@ -325,6 +397,142 @@
 			}?>
 		
 		<?php } // aqui fecha a lista de espera ?>
+
+<!Visualizar Alunos>
+
+					<?php if(@$_GET['mod'] == 'visualiza'){
+	
+						$cod_aluno = $_GET['aluno']; 
+	
+						$sql_select_tudo_aluno = "SELECT *, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento 
+						FROM inscricao i
+						INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao
+						INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel 
+						INNER JOIN matricula m ON a.id_aluno = m.id_aluno 
+						INNER JOIN turma t ON m.id_turma = t.id_turma 
+						WHERE a.id_aluno = '$cod_aluno'"; 
+						
+						$todos_dados_alunos = mysqli_query($conexao, $sql_select_tudo_aluno) or die(mysqli_error($conexao));
+						
+						$dados = mysqli_fetch_assoc($todos_dados_alunos);
+							$nome = $dados['nome'];
+							$data_nascimento = $dados['data_nascimento'];
+						?>
+	
+						<table width="900" border="0">
+							<tr>
+								<td>Código de inscrição:</td>
+								<td>Nome Completo:</td>
+								<td>Data de Nascimento:</td>
+							</tr>
+							<tr>
+								<td>							
+									<input type="number" value="<?php echo $cod_aluno; ?>" disabled >
+								</td>
+								<td>													
+									<input type="text" value="<?php echo $nome; ?>" disabled >																		
+								</td>
+								<td>							
+									<input type="text" value="<?php echo $data_nascimento; ?>" disabled>
+								</td>
+							</tr>
+							
+
+								<?php 
+
+								$conexao_select_ultimo_id = mysqli_query($conexao, $sql_select_ultimo_id_aluno_matriculado) or die(mysqli_error($conexao));
+
+								if(mysqli_num_rows($conexao_select_ultimo_id) == ''){
+									$novo_id = 1; ?>
+
+									<td>
+										<input type="text" name="code" id="textfield" disabled="disabled" value="<?php echo $novo_id; ?>">
+									</td>
+									<input type="hidden" name="code" value="<?php echo $novo_id; ?>"/>    
+								<?php }else{
+
+									while($resultado_select_aluno_matriculado_valores = mysqli_fetch_assoc($conexao_select_ultimo_id)){
+										#$mostraNome = $resultado_select_aluno_matriculado_valores['nome'];
+										$novo_id = $resultado_select_aluno_matriculado_valores['cod_aluno']+1; ?>
+										<td>
+											<input type="text" name="code" id="textfield" disabled="disabled" value="<?php echo $novo_id; ?>">
+										</td>
+										<input type="hidden" name="code" value="<?php echo $novo_id; ?>" />
+									<?php } 
+								} ?>
+
+								<td>
+								</td>							
+							</tr>    
+							<tr>
+								
+							</tr>
+							<tr>
+								<td>							
+									<input type="number" name="cod_inscricao" onkeyup="mostra_nome_aluno(this.value)" id="textfield2">
+								</td>
+								<td>							
+									<div id = "mostra_nome_aluno">
+										<input type="text" disabled="disabled">
+									</div>										
+								</td>
+								<td>							
+									<input type="date" name="data_nascimento_aluno" id="textfield3">
+								</td>
+							</tr>
+							<tr>
+								<td>RG:</td>
+								<td>CPF:</td>
+								<td>Logradouro:</td>
+							</tr>
+							<tr>
+								<td>								
+									<input type="text" name="rg_aluno" id="textfield4" maxlength="14">
+								</td>
+								<td>
+									<input type="text" name="cpf_aluno" id="textfield12" maxlength="11">
+								</td>
+								<td>
+									<input type="text" name="logradouro_aluno" id="textfield5">
+								</td>
+							</tr>
+							<tr>														  	
+								<td>Bairro:</td>
+								<td>Cidade:</td>
+								<td>Complemento:</td>
+							</tr>
+							<tr>
+								<td><input type="text" name="bairro_aluno" id="textfield7"></td>
+								<td><input type="text" name="cidade_aluno" id="textfield8"></td>
+								<td><input type="text" name="complemento_aluno" id="textfield8"></td>
+							</tr>
+							<tr>      								
+								<td>Cep:</td>
+								<td>Escolaridade:</td>
+								<td>Escola:</td> 
+							</tr>
+							<tr>								
+								<td><input type="text" name="cep_aluno" id="textfield8" maxlength="8"></td>
+								<td>
+									<select name="escolaridade" size="1" id="turno">
+										<option value="Ensino fundamental cursando">Ensino fundamental cursando</option>
+										<option value="Ensino fundamental concluído">Ensino fundamental concluído</option>
+										<option value="Ensino médio cursando">Ensino médio cursando</option>
+										<option value="Ensino médio concluído">Ensino médio concluído</option>
+									</select>									
+								</td>
+								<td><input type="text" name="escola" id="textfield9"></td>
+							</tr>							
+							<tr>
+								<td colspan="3"><center><input class="input" type="submit" name="button" id="button" value="Avançar"></center></td>								
+							</tr>
+						</table>
+					<?php } ?>
+<!>
+
+<!Editar Alunos>
+
+<!>
 	
 	
 <!CADASTRO DOS ESTUDANTES>
@@ -638,7 +846,10 @@
 						</td>
 						<td>
 							<center><strong>Celular</strong></center>
-						</td>						
+						</td>
+						<td>
+							<center><strong>Modificar</strong></center>
+						</td>
 					</tr>
 					<?php while($resultado_consulta_alunos_valores = mysqli_fetch_assoc($consulta_alunos)){ ?>
 						<tr>
@@ -661,66 +872,23 @@
 								<center><h3><?php echo $resultado_consulta_alunos_valores['celular_responsavel']; ?></h3></center>
 							</td>
 							<td>
-							</td>
-							<td>
-								<!--<a class="a" href="estudantes.php?pg=consulta&func=deleta&id=<#?php echo $resultado_consulta_alunos_valores['cod_aluno']; ?>&code=><#?php echo $res_1['code']; ?>"><img title="Excluir Aluno(a)" src="img/deleta.jpg" width="18" height="18" border="0"></a>
-								<#?php if($res_1['status'] == 'Inativo'){ ?>
-								<a class="a" href="estudantes.php?pg=todos&func=ativa&id=<#?php echo $res_1['id']; ?>&code=<#?php echo $res_1['code']; ?>"><img title="Ativar novamente Aluno(a)" src="../img/correto.jpg" width="20" height="20" border="0"></a>
-								<#?php } ?>
-								<#?php if($res_1['status'] == 'Ativo'){?>
-								<a class="a" href="estudantes.php?pg=todos&func=inativa&id=<#?php echo $res_1['id']; ?>&code=<#?php echo $res_1['code']; ?>"><img title="Inativar Aluno(a)" src="../img/ico_bloqueado.png" width="18" height="18" border="0"></a>
-								<#?php } ?>
-								<a class="a" rel='superbox[iframe][800x600]' href="mostrar_resultado.php?q=<#?php echo $res_1['code']; ?>&s=aluno&curso=<#?php echo $res_1['serie']; ?>"><img title="Informações detalhada deste aluno(a)" src="../img/visualizar16.gif" width="18" height="18" border="0"></a>/>-->
-							</td>
+								<center>									
+									<a href="estudantes.php?pg=aluno&amp;mod=visualiza&aluno=<?php echo $resultado_consulta_alunos_valores['id_aluno']; ?>" >
+										<img title="Visualizar" src="img/lupa_turma.png" width="18" height="18" border="0">
+									</a>
+									<a href="estudantes.php?pg=aluno&amp;mod=edita&aluno=<?php echo $resultado_consulta_alunos_valores['id_aluno']; ?>">
+										<img title="Atualizar" src="img/editar.png" width="18" height="18" border="0">
+									</a>
+									<a href="estudantes.php?pg=aluno&amp;mod=deleta&aluno=<?php echo $resultado_consulta_alunos_valores['id_aluno']; ?>">
+										<img title="Deletar" src="img/deletar.ico" width="18" height="18" border="0">
+									</a>
+								</center>	
+							</td>							
 						</tr>
 					<?php } ?>
 				</table>
 				<br/> 
 			<?php } // aqui fecha a consulta ?>		
-
-<! Exclusão, ativação e Desativação>
-
-		<?php if(@$_GET['func'] == 'deleta'){
-
-			$id = $_GET['id'];
-			$code = $_GET['code'];
-
-			$sql_del = "DELETE FROM estudantes WHERE id = '$id'";
-			$sql_del2 = "DELETE FROM login WHERE code = '$code'";
-			mysqli_query($conexao, $sql_del);
-			mysqli_query($conexao, $sql_del2);
-
-			echo "<script language='javascript'>window.location='estudantes.php?pg=consulta';</script>";
-		}?>
-
-
-		<?php if(@$_GET['func'] == 'ativa'){
-
-			$id = $_GET['id'];
-			$code = $_GET['code'];
-
-			$sql_editar = "UPDATE estudantes SET status = 'Ativo' WHERE id = '$id'";
-			$sql_editar2 = "UPDATE login SET status = 'Ativo' WHERE code = '$code'";
-			mysqli_query($conexao, $sql_editar);
-			mysqli_query($conexao,$sql_editar2);
-
-			echo "<script language='javascript'>window.location='estudantes.php?pg=consulta';</script>";
-		}?>
-
-
-		<?php if(@$_GET['func'] == 'inativa'){
-
-			$id = $_GET['id'];
-			$code = $_GET['code'];
-
-			$sql_editar = "UPDATE estudantes SET status = 'Inativo' WHERE id = '$id'";
-			$sql_editar2 = "UPDATE login SET status = 'Inativo' WHERE code = '$code'";
-			mysqli_query($conexao, $sql_editar);
-			mysqli_query($conexao,$sql_editar2);
-
-			echo "<script language='javascript'>window.location='estudantes.php?pg=consulta';</script>";
-		}?>
-	
 	<?php }// ?>
 </div>
 <?php require "rodape.php"; ?>
