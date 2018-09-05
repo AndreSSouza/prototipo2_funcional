@@ -404,7 +404,7 @@
 	
 						$cod_aluno = $_GET['aluno']; 
 	
-						$sql_select_tudo_aluno = "SELECT *, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento 
+						$sql_select_tudo_aluno = "SELECT *, a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_responsavel telefone_responsavel, i.celular_responsavel celular_responsavel, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.sexo_responsavel sexo_responsavel, /*r.data_nascimento_responsavel dt_nascimento_responsavel,*/ r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel
 						FROM inscricao i
 						INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao
 						INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel 
@@ -415,28 +415,186 @@
 						$todos_dados_alunos = mysqli_query($conexao, $sql_select_tudo_aluno) or die(mysqli_error($conexao));
 						
 						$dados = mysqli_fetch_assoc($todos_dados_alunos);
-							$nome = $dados['nome'];
-							$data_nascimento = $dados['data_nascimento'];
+							$cod_inscricao = $dados['cod_inscricao'];
+							$dt_inscricao = $dados['dt_inscricao'];
+							$cod_aluno = $dados['cod_aluno'];
+							$nome_A = $dados['nome'];
+							$sexo_A = $dados['sexo_aluno'];
+							$data_nascimento_A = $dados['data_nascimento'];
+							$data_nascimento_A = date('d/m/Y', strtotime($data_nascimento_A));					
+
+							// Separa em dia, mês e ano
+							list($dia, $mes, $ano) = explode('/', $data_nascimento_A);								
+
+							// Descobre que dia é hoje e retorna a unix timestamp
+							$dt_hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+	
+							// Descobre a unix timestamp da data de nascimento do fulano
+							$dt_nascimento_aluno = mktime( 0, 0, 0, $mes, $dia, $ano);
+
+							// Depois apenas fazemos o cálculo já citado :)
+							$idade_A = floor((((($dt_hoje - $dt_nascimento_aluno) / 60) / 60) / 24) / 365.25);	
+	
+							$RG_A = $dados['rg_aluno'];
+							$CPF_A = $dados['cpf_aluno'];
+							$email_A = $dados['email_aluno'];
+							$email_R = $dados['email_responsavel'];
+							$telefone_R = $dados['telefone_responsavel'];
+							$celular_R = $dados['celular_responsavel'];
+							$cod_responsavel = $dados['cod_responsavel'];
+							$nome_R = $dados['nome_responsavel'];
+							$sexo_R = $dados['sexo_responsavel'];
+							$rg_R = $dados['rg_responsavel'];
+							$cpf_R = $dados['cpf_responsavel'];
 						?>
 	
-						<table width="900" border="0">
+						<table border="0">
 							<tr>
-								<td>Código de inscrição:</td>
-								<td>Nome Completo:</td>
+								<td colspan="3">
+									<br><i><center><b>Informações Pessoais do Aluno</b></center></i><br>
+								</td>
+							</tr>
+							<tr>
+								<td>Código de Inscrição:</td>
+								<td>Data de Inscrição:</td>
+								<td>Código do Aluno:</td>								
+							</tr>
+							<tr>
+								<td>							
+									<input type="text" value="<?php echo $cod_inscricao; ?>" disabled >
+								</td>
+								<td>													
+									<input type="text" value="<?php echo $dt_inscricao = date('d/m/Y', strtotime($dt_inscricao)); ?>" disabled >								 										
+								</td>
+								<td>							
+									<input type="text" value="<?php echo $cod_aluno;?>" disabled>
+								</td>
+							</tr>
+							<tr>
+								<td>Nome:</td>
+								<td>Sexo:</td>
 								<td>Data de Nascimento:</td>
 							</tr>
 							<tr>
-								<td>							
-									<input type="number" value="<?php echo $cod_aluno; ?>" disabled >
+								<td>
+									<input type="text" value="<?php echo $nome_A;?>" disabled>
 								</td>
-								<td>													
-									<input type="text" value="<?php echo $nome; ?>" disabled >																		
+								<td>
+									<input type="text" value="<?php echo $sexo_A;?>" disabled>
 								</td>
-								<td>							
-									<input type="text" value="<?php echo $data_nascimento; ?>" disabled>
+								<td>
+									<input type="text" value="<?php echo $data_nascimento_A;?>" disabled>
 								</td>
 							</tr>
-							
+							<tr>
+								<td>Idade:</td>
+								<td>RG:</td>
+								<td>CPF:</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" value="<?php echo $idade_A;?>" disabled>
+								</td>
+								<td>
+									<input type="text" value="<?php echo $RG_A;?>" disabled>
+								</td>
+								<td>
+									<input type="text" value="<?php echo $CPF_A;?>" disabled>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+									<br><i><center><b>Informações Pessoais do Responsável</b></center></i><br>
+								</td>
+							</tr>
+							<tr>
+								<td>Código do Responsavel:</td>
+								<td>Nome:</td>
+								<td>Data de Nascimento:</td>
+								<td>Sexo:</td>
+							</tr>
+							<tr>
+								<td>							
+									<input style="width: 25px" type="text" value="<?php echo $cod_responsavel; ?>" disabled >
+								</td>
+								<td>													
+									<input type="text" value="<?php echo $nome_R; ?>" disabled >								 										
+								</td>
+								<td>							
+									<input type="text" value="Falta Inplementar o campo data de nascimento na tabela professor" disabled>
+								</td>
+								<td>							
+									<input type="text" value="<?php echo $sexo_R;?>" disabled>
+								</td>
+							</tr>
+							<tr>
+								<td>Idade:</td>
+								<td>RG:</td>
+								<td>CPF:</td>								
+							</tr>
+							<tr>
+								<td>							
+									<input type="text" value="falta implementar o campo data de nascimento na tabela professor" disabled >
+								</td>
+								<td>													
+									<input type="text" value="<?php echo $rg_R; ?>" disabled >								 										
+								</td>
+								<td>							
+									<input type="text" value="<?php echo $cpf_R;?>" disabled>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4">
+									<br><i><center><b>Contatos</b></center></i><br>
+								</td>
+							</tr>
+							<tr>
+								<td>E-mail do Aluno:</td>
+								<td>E-mail do Responsavel:</td>
+								<td>Telefone do Responsavel:</td>
+								<td>Celular do Responsavel:</td>								
+							</tr>
+							<tr>
+								<td>							
+									<input type="text" value="<?php echo $email_A; ?>" disabled >
+								</td>
+								<td>							
+									<input type="text" value="<?php echo $email_R; ?>" disabled >
+								</td>
+								<td>													
+									<input style="width: 110px" type="text" value="<?php echo $telefone_R; ?>" disabled >								 										
+								</td>
+								<td>							
+									<input style="width: 120px" type="text" value="<?php echo $celular_R;?>" disabled>
+								</td>
+							</tr>	
+							<tr>
+								<td colspan="4">
+									<br><i><center><b>Endereço</b></center></i><br>
+								</td>
+							</tr>
+							<tr>
+								<td>Rua:</td>
+								<td>Número:</td>
+								<td>Bairro:</td>															
+							</tr>
+							<tr>
+								<td>							
+									<input type="text" value="<?php echo $email_A; ?>" disabled >
+								</td>
+								<td>							
+									<input type="text" value="<?php echo $email_R; ?>" disabled >
+								</td>
+								<td>													
+									<input style="width: 110px" type="text" value="<?php echo $telefone_R; ?>" disabled >								 					
+								</td>							
+							</tr>
+							<tr>
+								<td>Cidade:</td>	
+								<td>Complemento:</td>
+								<td>CEP:</td>
+							</tr>
+						</table>
 
 								<?php 
 
