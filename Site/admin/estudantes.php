@@ -404,7 +404,7 @@
 	
 						$cod_aluno = $_GET['aluno']; 
 	
-						$sql_select_tudo_aluno = "SELECT *, a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_responsavel telefone_responsavel, i.celular_responsavel celular_responsavel, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.sexo_responsavel sexo_responsavel, /*r.data_nascimento_responsavel dt_nascimento_responsavel,*/ r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel
+						$sql_select_tudo_aluno = "SELECT *, a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_responsavel telefone_responsavel, i.celular_responsavel celular_responsavel, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.sexo_responsavel sexo_responsavel, /*r.data_nascimento_responsavel dt_nascimento_responsavel,*/ r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, /*a.rua_aluno rua_aluno, a.numero_aluno numero_aluno*/ a.logradouro_aluno logradouro_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, m.data_matricula dt_matricula, t.nome_turma nome_turma 
 						FROM inscricao i
 						INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao
 						INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel 
@@ -422,17 +422,10 @@
 							$sexo_A = $dados['sexo_aluno'];
 							$data_nascimento_A = $dados['data_nascimento'];
 							$data_nascimento_A = date('d/m/Y', strtotime($data_nascimento_A));					
-
-							// Separa em dia, mês e ano
+							
 							list($dia, $mes, $ano) = explode('/', $data_nascimento_A);								
-
-							// Descobre que dia é hoje e retorna a unix timestamp
-							$dt_hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-	
-							// Descobre a unix timestamp da data de nascimento do fulano
+							$dt_hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));	
 							$dt_nascimento_aluno = mktime( 0, 0, 0, $mes, $dia, $ano);
-
-							// Depois apenas fazemos o cálculo já citado :)
 							$idade_A = floor((((($dt_hoje - $dt_nascimento_aluno) / 60) / 60) / 24) / 365.25);	
 	
 							$RG_A = $dados['rg_aluno'];
@@ -446,6 +439,32 @@
 							$sexo_R = $dados['sexo_responsavel'];
 							$rg_R = $dados['rg_responsavel'];
 							$cpf_R = $dados['cpf_responsavel'];
+							$logradouro_A = $dados['logradouro_aluno'];
+							$bairro_A = $dados['bairro_aluno'];
+							$cidade_A = $dados['cidade_aluno'];
+							$complemento_A = $dados['complemento_aluno'];
+							$cep_A = $dados['cep_aluno'];
+							$escola_A = $dados['escola_aluno'];
+							$escolaridade_A = $dados['escolaridade_aluno'];
+							$matriculado = $dados['matriculado'];
+							$dt_matricula = $dados['dt_matricula'];
+							$dt_matricula = date("d/m/Y", strtotime($dt_matricula));
+							$nome_turma = $dados['nome_turma'];
+		
+							//relacionado a chamada
+							$qtd_faltas = "SELECT COUNT(presenca) faltas FROM chamada WHERE id_aluno = '$cod_aluno' AND presenca = 0";
+							$sql_faltas = mysqli_query($conexao, $qtd_faltas) or die (mysqli_error($conexao));
+							$res_faltas = mysqli_fetch_assoc($sql_faltas);
+							$faltas = $res_faltas['faltas'];
+							
+							//quantidade de aulas já dadas
+							$qtd_aulas = "SELECT COUNT(DISTINCT(c.data_chamada)) 'aulas_dadas' FROM chamada c INNER JOIN matricula m ON m.id_aluno = c.id_aluno WHERE (c.data_chamada BETWEEN m.data_matricula AND CURRENT_DATE) AND c.id_aluno = '$cod_aluno'";
+							$sql_aulas = mysqli_query($conexao, $qtd_aulas) or die(mysqli_error($conexao));
+							$res_aulas = mysqli_fetch_assoc($sql_aulas);
+							$quantidade_aulas = $res_aulas['aulas_dadas'];
+	
+							$chamada = "SELECT c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca FROM inscricao i INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN matricula m ON a.id_aluno = m.id_aluno INNER JOIN turma t ON m.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE a.id_aluno = '$cod_aluno' ORDER BY c.data_chamada;";
+							$sql_chamada = mysqli_query($conexao, $chamada) or die(mysqli_error($conexao));					
 						?>
 	
 						<table border="0">
@@ -569,7 +588,7 @@
 								</td>
 							</tr>	
 							<tr>
-								<td colspan="4">
+								<td colspan="3">
 									<br><i><center><b>Endereço</b></center></i><br>
 								</td>
 							</tr>
@@ -580,13 +599,13 @@
 							</tr>
 							<tr>
 								<td>							
-									<input type="text" value="<?php echo $email_A; ?>" disabled >
+									<input type="text" value="<?php echo $logradouro_A; ?>" disabled >
 								</td>
 								<td>							
-									<input type="text" value="<?php echo $email_R; ?>" disabled >
+									<input type="text" value="<?php echo $logradouro_A; ?>" disabled >
 								</td>
 								<td>													
-									<input style="width: 110px" type="text" value="<?php echo $telefone_R; ?>" disabled >								 					
+									<input type="text" value="<?php echo $bairro_A; ?>" disabled >								 					
 								</td>							
 							</tr>
 							<tr>
@@ -594,98 +613,74 @@
 								<td>Complemento:</td>
 								<td>CEP:</td>
 							</tr>
-						</table>
-
-								<?php 
-
-								$conexao_select_ultimo_id = mysqli_query($conexao, $sql_select_ultimo_id_aluno_matriculado) or die(mysqli_error($conexao));
-
-								if(mysqli_num_rows($conexao_select_ultimo_id) == ''){
-									$novo_id = 1; ?>
-
-									<td>
-										<input type="text" name="code" id="textfield" disabled="disabled" value="<?php echo $novo_id; ?>">
-									</td>
-									<input type="hidden" name="code" value="<?php echo $novo_id; ?>"/>    
-								<?php }else{
-
-									while($resultado_select_aluno_matriculado_valores = mysqli_fetch_assoc($conexao_select_ultimo_id)){
-										#$mostraNome = $resultado_select_aluno_matriculado_valores['nome'];
-										$novo_id = $resultado_select_aluno_matriculado_valores['cod_aluno']+1; ?>
-										<td>
-											<input type="text" name="code" id="textfield" disabled="disabled" value="<?php echo $novo_id; ?>">
-										</td>
-										<input type="hidden" name="code" value="<?php echo $novo_id; ?>" />
-									<?php } 
-								} ?>
-
-								<td>
-								</td>							
-							</tr>    
-							<tr>
-								
-							</tr>
-							<tr>
+							<tr>								
 								<td>							
-									<input type="number" name="cod_inscricao" onkeyup="mostra_nome_aluno(this.value)" id="textfield2">
+									<input type="text" value="<?php echo $cidade_A; ?>" disabled >
 								</td>
 								<td>							
-									<div id = "mostra_nome_aluno">
-										<input type="text" disabled="disabled">
-									</div>										
+									<input type="text" value="<?php echo $complemento_A; ?>" disabled >
 								</td>
-								<td>							
-									<input type="date" name="data_nascimento_aluno" id="textfield3">
+								<td>													
+									<input type="text" value="<?php echo $cep_A; ?>" disabled >								 					
 								</td>
 							</tr>
 							<tr>
-								<td>RG:</td>
-								<td>CPF:</td>
-								<td>Logradouro:</td>
+								<td colspan="3">
+									<br><i><center><b>Informações Adicionais</b></center></i><br>
+								</td>
 							</tr>
 							<tr>
-								<td>								
-									<input type="text" name="rg_aluno" id="textfield4" maxlength="14">
-								</td>
-								<td>
-									<input type="text" name="cpf_aluno" id="textfield12" maxlength="11">
-								</td>
-								<td>
-									<input type="text" name="logradouro_aluno" id="textfield5">
-								</td>
-							</tr>
-							<tr>														  	
-								<td>Bairro:</td>
-								<td>Cidade:</td>
-								<td>Complemento:</td>
-							</tr>
-							<tr>
-								<td><input type="text" name="bairro_aluno" id="textfield7"></td>
-								<td><input type="text" name="cidade_aluno" id="textfield8"></td>
-								<td><input type="text" name="complemento_aluno" id="textfield8"></td>
-							</tr>
-							<tr>      								
-								<td>Cep:</td>
-								<td>Escolaridade:</td>
-								<td>Escola:</td> 
+								<td>Escolaridade:</td>								
+								<td>Escola:</td>									
+								<td>Matriculado:</td>
 							</tr>
 							<tr>								
-								<td><input type="text" name="cep_aluno" id="textfield8" maxlength="8"></td>
-								<td>
-									<select name="escolaridade" size="1" id="turno">
-										<option value="Ensino fundamental cursando">Ensino fundamental cursando</option>
-										<option value="Ensino fundamental concluído">Ensino fundamental concluído</option>
-										<option value="Ensino médio cursando">Ensino médio cursando</option>
-										<option value="Ensino médio concluído">Ensino médio concluído</option>
-									</select>									
+								<td>							
+									<input type="text" value="<?php echo $escolaridade_A; ?>" disabled >
 								</td>
-								<td><input type="text" name="escola" id="textfield9"></td>
-							</tr>							
-							<tr>
-								<td colspan="3"><center><input class="input" type="submit" name="button" id="button" value="Avançar"></center></td>								
+								<td>							
+									<input type="text" value="<?php echo $escola_A; ?>" disabled >
+								</td>
+								<td>													
+									<input type="text" value="<?php echo $matriculado = $matriculado ? "Sim" : "Não" ; ?>" disabled >								 					
+								</td>
 							</tr>
+							<tr>
+								<td colspan="2">
+									<br><i><center><b>Matrícula</b></center></i><br>
+								</td>
+							</tr>
+							<tr>
+								<td>Data de Matricula:</td>					
+								<td>Turma:</td>								
+							</tr>
+							<tr>								
+								<td>							
+									<input type="text" value="<?php echo $dt_matricula; ?>" disabled >
+								</td>
+								<td>							
+									<input type="text" value="<?php echo $nome_turma; ?>" disabled >
+								</td>							
+							</tr>
+							<tr>
+								<td colspan="2">
+									<br><i><center><b>Chamada</b></center></i><br>
+								</td>
+							</tr>
+							<tr>
+								<td>Quantidade de Faltas:</td>					
+								<td>Quantidade de aulas dadas:</td>								
+							</tr>
+							<tr>								
+								<td>							
+									<input type="text" value="<?php echo $faltas; ?>" disabled >
+								</td>
+								<td>							
+									<input type="text" value="<?php echo $quantidade_aulas; ?>" disabled>
+								</td>							
+							</tr>							
 						</table>
-					<?php } ?>
+					<?php die;} ?>
 <!>
 
 <!Editar Alunos>
