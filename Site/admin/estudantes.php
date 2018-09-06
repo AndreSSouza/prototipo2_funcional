@@ -404,7 +404,7 @@
 	
 						$cod_aluno = $_GET['aluno']; 
 	
-						$sql_select_tudo_aluno = "SELECT *, a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_responsavel telefone_responsavel, i.celular_responsavel celular_responsavel, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.sexo_responsavel sexo_responsavel, /*r.data_nascimento_responsavel dt_nascimento_responsavel,*/ r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, /*a.rua_aluno rua_aluno, a.numero_aluno numero_aluno*/ a.logradouro_aluno logradouro_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, m.data_matricula dt_matricula, t.nome_turma nome_turma 
+						$sql_select_tudo_aluno = "SELECT *, a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_responsavel telefone_responsavel, i.celular_responsavel celular_responsavel, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.sexo_responsavel sexo_responsavel, /*r.data_nascimento_responsavel dt_nascimento_responsavel,*/ r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, /*a.rua_aluno rua_aluno, a.numero_aluno numero_aluno*/ a.logradouro_aluno logradouro_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, m.data_matricula dt_matricula, t.nome_turma nome_turma, m.id_turma id_turma 
 						FROM inscricao i
 						INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao
 						INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel 
@@ -450,6 +450,7 @@
 							$dt_matricula = $dados['dt_matricula'];
 							$dt_matricula = date("d/m/Y", strtotime($dt_matricula));
 							$nome_turma = $dados['nome_turma'];
+							$cod_turma = $dados['id_turma'];
 		
 							//relacionado a chamada
 							$qtd_faltas = "SELECT COUNT(presenca) faltas FROM chamada WHERE id_aluno = '$cod_aluno' AND presenca = 0";
@@ -463,7 +464,7 @@
 							$res_aulas = mysqli_fetch_assoc($sql_aulas);
 							$quantidade_aulas = $res_aulas['aulas_dadas'];
 	
-							$chamada = "SELECT c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca FROM inscricao i INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN matricula m ON a.id_aluno = m.id_aluno INNER JOIN turma t ON m.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE a.id_aluno = '$cod_aluno' ORDER BY c.data_chamada;";
+							$chamada = "SELECT c.data_chamada data_chamada, t.nome_turma nome_turma, p.nome_professor nome_professor, i.nome_aluno nome_aluno, c.presenca presenca FROM inscricao i INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel INNER JOIN matricula m ON a.id_aluno = m.id_aluno INNER JOIN turma t ON m.id_turma = t.id_turma INNER JOIN chamada c ON c.id_aluno = a.id_aluno INNER JOIN professor p ON p.id_professor = c.id_professor WHERE (c.data_chamada BETWEEN m.data_matricula AND CURRENT_DATE) AND a.id_aluno = '$cod_aluno' AND m.id_turma = '$cod_turma' ORDER BY c.data_chamada;";
 							$sql_chamada = mysqli_query($conexao, $chamada) or die(mysqli_error($conexao));					
 						?>
 	
@@ -678,8 +679,38 @@
 								<td>							
 									<input type="text" value="<?php echo $quantidade_aulas; ?>" disabled>
 								</td>							
+							</tr>
+							<tr>
+								<td colspan="5">
+									<br><i><center><b>Histórico de Presenças</b></center></i><br>
+								</td>
+							</tr>
+							<tr>
+								<td><b>Data da Chamada</b></td>
+								<td><b>Nome da Turma</b></td>
+								<td><b>Nome do Professor</b></b></td>
+								<td><b>Nome do Aluno</td>
+								<td><b>Status</b></td>								
 							</tr>							
+							<?php while($val_chamada = mysqli_fetch_assoc($sql_chamada)){ 
+								$data_chamada = $val_chamada['data_chamada'];
+								$data_chamada = date("d/m/Y", strtotime($data_chamada));
+								$nomeTurma = $val_chamada['nome_turma'];
+								$nomeProfessor = $val_chamada['nome_professor'];
+								$nomeAluno = $val_chamada['nome_aluno'];
+								$status = $val_chamada['presenca'];
+								$cor = $status ? 'lightgreen' : 'tomato';
+								$status = $status ? "Presença" : "Falta";?>
+								<tr style="background-color: <?php echo $cor;?>">
+									<td><?php echo $data_chamada; ?></td>
+									<td><?php echo $nomeTurma; ?></td>
+									<td><?php echo $nomeProfessor; ?></td>
+									<td><?php echo $nomeAluno; ?></td>
+									<td><?php echo $status; ?></td>
+								</tr>
+							<?php } ?>
 						</table>
+
 					<?php die;} ?>
 <!>
 
