@@ -170,7 +170,7 @@
 										<option value="MASCULINO">Masculino</option>
 										<option value="FEMININO">Feminino</option>
 									<?php } ?>								
-							</select>
+								</select>
 							</td>
 						</tr>					
 						<tr>
@@ -715,7 +715,261 @@
 <!>
 
 <!Editar Alunos>
+					<?php if(@$_GET['mod'] == 'atualiza'){
+	
+						$cod_aluno = $_GET['aluno']; 
+	
+						$sql_select_tudo_aluno = "SELECT *, a.id_aluno cod_aluno, i.id_inscricao cod_inscricao, i.data_inscricao dt_inscricao, i.nome_aluno nome, a.data_nascimento_aluno data_nascimento, i.sexo_aluno sexo_aluno, a.rg_aluno rg_aluno, a.cpf cpf_aluno, i.email email_aluno, i.telefone_responsavel telefone_responsavel, i.celular_responsavel celular_responsavel, r.email email_responsavel, r.id_responsavel cod_responsavel, r.nome_responsavel nome_responsavel, r.sexo_responsavel sexo_responsavel, /*r.data_nascimento_responsavel dt_nascimento_responsavel,*/ r.rg_responsavel rg_responsavel, r.cpf cpf_responsavel, /*a.rua_aluno rua_aluno, a.numero_aluno numero_aluno*/ a.logradouro_aluno logradouro_aluno, a.bairro_aluno bairro_aluno, a.cidade_aluno cidade_aluno, a.complemento_aluno complemento_aluno, a.cep_aluno cep_aluno, a.escola escola_aluno, a.escolaridade escolaridade_aluno, a.matriculado matriculado, m.data_matricula dt_matricula, t.nome_turma nome_turma, m.id_turma id_turma 
+						FROM inscricao i
+						INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao
+						INNER JOIN responsavel r ON a.id_responsavel = r.id_responsavel 
+						INNER JOIN matricula m ON a.id_aluno = m.id_aluno 
+						INNER JOIN turma t ON m.id_turma = t.id_turma 
+						WHERE a.id_aluno = '$cod_aluno'"; 
+						
+						$todos_dados_alunos = mysqli_query($conexao, $sql_select_tudo_aluno) or die(mysqli_error($conexao));
+						
+						$dados = mysqli_fetch_assoc($todos_dados_alunos);
+	
+						$cod_aluno = $dados['cod_aluno'];
+						$nome_A = $dados['nome'];
+						$sexo_A = $dados['sexo_aluno'];
+						$data_nascimento_A = $dados['data_nascimento'];
+						$RG_A = $dados['rg_aluno'];
+						$CPF_A = $dados['cpf_aluno'];
+						$email_A = $dados['email_aluno'];
+						$email_R = $dados['email_responsavel'];
+						$telefone_R = $dados['telefone_responsavel'];
+						$celular_R = $dados['celular_responsavel'];
+						$cod_responsavel = $dados['cod_responsavel'];
+						$nome_R = $dados['nome_responsavel'];
+						$sexo_R = $dados['sexo_responsavel'];
+						$rg_R = $dados['rg_responsavel'];
+						$cpf_R = $dados['cpf_responsavel'];
+						$logradouro_A = $dados['logradouro_aluno'];
+						$bairro_A = $dados['bairro_aluno'];
+						$cidade_A = $dados['cidade_aluno'];
+						$complemento_A = $dados['complemento_aluno'];
+						$cep_A = $dados['cep_aluno'];
+						$escola_A = $dados['escola_aluno'];
+						$escolaridade_A = $dados['escolaridade_aluno'];	?>
+					<br>
+					<br>
+					<form method="post">
+						<table border="0">
+							<tr>
+								<td colspan="3">
+									<br><i><center><b>Informações Pessoais do Aluno</b></center></i><br>
+								</td>
+							</tr>							
+							<tr>
+								<td>Nome:</td>
+								<td>Sexo:</td>
+								<td>Data de Nascimento:</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" name="nomeA" value="<?php echo $nome_A;?>" >
+								</td>
+								<td>
+									<select name="sexoA" size="1" id="">
+										<option value="<?php echo $sexo_A; ?>"><?php $mostra_sexo = strtolower($sexo_A) ; echo ucfirst($mostra_sexo); ?></option>
+										<?php if($sexo_A == "MASCULINO"){ ?>
+											<option value="FEMININO">Feminino</option>
+											<option value="OUTRO">Outro</option>
+										<?php }elseif($sexo_A == "FEMININO"){ ?>
+											<option value="MASCULINO">Masculino</option>
+											<option value="OUTRO">Outro</option>
+										<?php }else{ ?>
+											<option value="MASCULINO">Masculino</option>
+											<option value="FEMININO">Feminino</option>
+										<?php } ?>								
+									</select>									
+								</td>
+								<td>
+									<input type="date" name="dtNascimentoA" value="<?php echo $data_nascimento_A;?>" >
+								</td>
+							</tr>
+							<tr>								
+								<td>RG:</td>
+								<td>CPF:</td>
+								<td>E-mail do Aluno:</td>
+							</tr>
+							<tr>								
+								<td>
+									<input type="number" name="rgA" value="<?php echo $RG_A;?>" >
+								</td>
+								<td>
+									<input type="number" name="cpfA" value="<?php echo $CPF_A;?>" >
+								</td>
+								<td>							
+									<input type="email" name="emailA" value="<?php echo $email_A; ?>">
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+									<br><i><center><b>Informações Pessoais do Responsável</b></center></i><br>
+								</td>
+							</tr>
+							<tr>								
+								<td>Nome:</td>
+								<td>Data de Nascimento:</td>
+								<td>Sexo:</td>
+							</tr>
+							<tr>							
+								<td>													
+									<input type="text" name="nomeR" value="<?php echo $nome_R; ?>"  >								 										
+								</td>
+								<td>							
+									<input type="text" value="Falta Inplementar o campo data de nascimento na tabela responsavel" disabled>
+								</td>
+								<td>
+									<select name="sexoR" size="1" id="">
+										<option value="<?php echo $sexo_R; ?>"><?php $mostra_sexo = strtolower($sexo_R) ; echo ucfirst($mostra_sexo); ?></option>
+										<?php if($sexo_R == "MASCULINO"){ ?>
+											<option value="FEMININO">Feminino</option>
+											<option value="OUTRO">Outro</option>
+										<?php }elseif($sexo_R == "FEMININO"){ ?>
+											<option value="MASCULINO">Masculino</option>
+											<option value="OUTRO">Outro</option>
+										<?php }else{ ?>
+											<option value="MASCULINO">Masculino</option>
+											<option value="FEMININO">Feminino</option>
+										<?php } ?>								
+									</select>									
+								</td>
+							</tr>
+							<tr>								
+								<td>RG:</td>
+								<td>CPF:</td>								
+							</tr>
+							<tr>								
+								<td>													
+									<input type="number" name="rgR" value="<?php echo $rg_R; ?>"  >								 										
+								</td>
+								<td>							
+									<input type="number" name="cpfR" value="<?php echo $cpf_R;?>" >
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4">
+									<br><i><center><b>Contatos</b></center></i><br>
+								</td>
+							</tr>
+							<tr>								
+								<td>E-mail do Responsavel:</td>
+								<td>Telefone do Responsavel:</td>
+								<td>Celular do Responsavel:</td>								
+							</tr>
+							<tr>
+								<td>							
+									<input type="email" name="emailR" value="<?php echo $email_R; ?>" >
+								</td>
+								<td>													
+									<input type="number" name="telefoneR" value="<?php echo $telefone_R; ?>" >								 										
+								</td>
+								<td>							
+									<input type="number" name="celularR" value="<?php echo $celular_R;?>" 
+								</td>
+							</tr>	
+							<tr>
+								<td colspan="3">
+									<br><i><center><b>Endereço</b></center></i><br>
+								</td>
+							</tr>
+							<tr>
+								<td>Rua:</td>
+								<td>Número:</td>
+								<td>Bairro:</td>															
+							</tr>
+							<tr>
+								<td>							
+									<input type="text" name="ruaA" value="<?php echo $logradouro_A; ?>" >
+								</td>
+								<td>							
+									<input type="" name="numeroA" value="<?php echo $logradouro_A; ?>" >
+								</td>
+								<td>													
+									<input type="text" name="bairroA" value="<?php echo $bairro_A; ?>" >								 					
+								</td>							
+							</tr>
+							<tr>
+								<td>Cidade:</td>	
+								<td>Complemento:</td>
+								<td>CEP:</td>
+							</tr>
+							<tr>								
+								<td>							
+									<input type="text" name="cidadeA" value="<?php echo $cidade_A; ?>" >
+								</td>
+								<td>							
+									<input type="text" name="complementoA" value="<?php echo $complemento_A; ?>" >
+								</td>
+								<td>													
+									<input type="number" name="cepA" value="<?php echo $cep_A; ?>" >								 					
+								</td>
+							</tr>
+							<tr>								
+								<td colspan="3"><center>
+									<br>
+									<input class="input" type="submit" name="salvar" value="Salvar"/>
+									<input class="input" type="submit" name="cancelar" value="Cancelar"/>
+									</center>	
+								</td>
+							</tr>
+						</table>
+					</form>
+					<br>
+					<br>
 
+					<?php if(isset($_POST['cancelar'])){
+
+						echo "<script language='javascript'>window.location='estudantes.php?pg=aluno';</script>";	
+					}
+					if(isset($_POST['salvar'])){
+					
+						$nomeA = $_POST['nomeA'];
+						$sexoA = $_POST['sexoA'];
+						$dtNascimentoA = $_POST['dtNascimentoA'];
+						$rgA = $_POST['rgA'];
+						$cpfA = $_POST['cpfA'];
+						$emailA = $_POST['emailA'];
+						$nomeR = $_POST['nomeR'];
+						$sexoR = $_POST['sexoR'];
+						$emailR = $_POST['emailR'];
+						$rgR = $_POST['rgR'];
+						$cpfR = $_POST['cpfR'];
+						$telefoneR = $_POST['telefoneR'];
+						$celularR = $_POST['celularR'];
+						//$ruaA = $_POST['ruaA'];
+						$numeroA = $_POST['numeroA'];
+						$bairroA = $_POST['bairroA'];
+						$cidadeA = $_POST['cidadeA'];
+						$complementoA = $_POST['complementoA'];
+						$cepA = $_POST['cepA'];
+						
+						if(($nomeA != $nome_A) || ($sexoA != $sexo_A) || ($dtNascimentoA != $data_nascimento_A) || ($rgA != $RG_A) || ($cpfA != $CPF_A) || ($emailA != $email_A) || ($nomeR != $nome_R) || ($sexoR != $sexo_R) || ($emailR != $email_R) || ($telefoneR != $telefone_R) || ($celularR != $celular_R) || ($numeroA != $logradouro_A) || ($bairroA = $bairro_A) || ($cidadeA != $cidade_A) || ($complementoA != $complemento_A) || ($cepA != $cep_A)){
+							
+							$update_inscricao_modifica = "UPDATE inscricao i SET i.nome_aluno = '$nomeA', i.sexo_aluno = '$sexoA', i.email = '$emailA', i.telefone_responsavel = '$telefoneR', i.celular_responsavel = '$celularR' WHERE i.id_aluno = '$cod_aluno'";
+							
+							$update_aluno_modifica = "UPDATE aluno a SET a.data_nascimento_aluno = '$dtNascimentoA', a.rg_aluno = '$rgA', a.cpf = '$cpfA', a.logradouro_aluno = '$numeroA', a.bairro_aluno = '$bairroA', a.cidade_aluno = '$cidadeA', a.complemento_aluno = '$complementoA', a.cep_aluno = '$cepA' WHERE a.id_aluno = '$cod_aluno'";
+							
+							$update_responsavel_modifica = "UPDATE responsavel r SET r.nome_responsavel = '$nomeR', r.sexo_responsavel = '$sexoR', r.email = '$emailR', r.rg_responsavel = '$rgR', r.cpf = '$cpfR' WHERE r.id_responsavel = '$cod_responsavel'";
+							
+							//inscricao
+							mysqli_query($conexao, $update_inscricao_modifica) or die(mysqli_error($conexao));
+							
+							//aluno
+							mysqli_query($conexao, $update_aluno_modifica) or die(mysqli_error($conexao));
+							
+							//responsavel
+							mysqli_query($conexao, $update_responsavel_modifica) or die(mysqli_error($conexao));
+							
+							echo "<script language='javascript'> window.alert('Aluno(a) atualizado(a) com Sucesso!'); window.location='estudantes.php?pg=aluno';</script>";
+						}													
+					}
+	
+				die;} ?>
 <!>
 	
 	
@@ -1060,7 +1314,7 @@
 									<a href="estudantes.php?pg=aluno&amp;mod=visualiza&aluno=<?php echo $resultado_consulta_alunos_valores['id_aluno']; ?>" >
 										<img title="Visualizar" src="img/lupa_turma.png" width="18" height="18" border="0">
 									</a>
-									<a href="estudantes.php?pg=aluno&amp;mod=edita&aluno=<?php echo $resultado_consulta_alunos_valores['id_aluno']; ?>">
+									<a href="estudantes.php?pg=aluno&amp;mod=atualiza&aluno=<?php echo $resultado_consulta_alunos_valores['id_aluno']; ?>">
 										<img title="Atualizar" src="img/editar.png" width="18" height="18" border="0">
 									</a>
 									<a href="estudantes.php?pg=aluno&amp;mod=deleta&aluno=<?php echo $resultado_consulta_alunos_valores['id_aluno']; ?>">

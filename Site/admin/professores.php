@@ -1007,8 +1007,8 @@
 					}
 				}
 																	   
-				if(isset($_POST['cancelar'])){
-					echo "<script language='javascript'>window.location='professores.php?pg=professor&op=visualizar&professor=$cod_professor';</script>";						
+				if(isset($_POST['cancelar'])){					
+					echo "<script language='javascript'>window.location='professores.php?pg=professor&op=visualizar&professor=$cod_professor';</script>";					
 				}?>
 				
 				<br/>
