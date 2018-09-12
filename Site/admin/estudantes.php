@@ -337,7 +337,7 @@
 						</td>
 						<td>
 							<center><strong>Telefone</strong></center>
-						</td>
+						</td>	
 						<td>
 							<center><strong>Celular</strong></center>
 						</td>
@@ -347,27 +347,27 @@
 					</tr>
 					<?php while($resultado_consulta_aluno_cadastrado_valores = mysqli_fetch_assoc($consulta_aluno_cadastrado)){ ?>
 						<tr>
-							<td style="color: #A00C0E">
+							<td>
 								<center><?php echo $resultado_consulta_aluno_cadastrado_valores['id_inscricao'];?></center>
 							</td>
-							<td style="color: #A00C0E">
+							<td>
 								<center><?php $data_sem_formatacao = $resultado_consulta_aluno_cadastrado_valores['data_inscricao']; 
 								$data_formatada = strtotime("$data_sem_formatacao");
 								echo date("d-m-Y h:i:s", $data_formatada);?></center>
 							</td>							
-							<td style="color: #A00C0E">
+							<td>
 								<center><?php echo $resultado_consulta_aluno_cadastrado_valores['nome_aluno']; ?></center>
 							</td>							
-							<td style="color: #A00C0E">
+							<td>
 								<center><?php echo $resultado_consulta_aluno_cadastrado_valores['email']; ?></center>
 							</td>
-							<td style="color: #A00C0E">
+							<td>
 								<center><?php echo $resultado_consulta_aluno_cadastrado_valores['telefone_responsavel']; ?></center>
 							</td>
-							<td style="color: #A00C0E">
+							<td>
 								<center><?php echo $resultado_consulta_aluno_cadastrado_valores['celular_responsavel']; ?></center>
 							</td>
-							<td style="color: #A00C0E">
+							<td>
 								<center>									
 									<a href="estudantes.php?pg=espera&amp;mod=visualiza&inscricao=<?php echo $resultado_consulta_aluno_cadastrado_valores['id_inscricao']; ?>" >
 										<img title="Visualizar" src="img/lupa_turma.png" width="18" height="18" border="0">
@@ -627,7 +627,7 @@
 							</tr>
 							<tr>
 								<td colspan="3">
-									<br><i><center><b>Informações Adicionais</b></center></i><br>
+									<br><i><center><b>Informações adicionais</b></center></i><br>
 								</td>
 							</tr>
 							<tr>
@@ -652,7 +652,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td>Data de Matricula:</td>					
+								<td>Data de matricula:</td>					
 								<td>Turma:</td>								
 							</tr>
 							<tr>								
@@ -669,7 +669,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td>Quantidade de Faltas:</td>					
+								<td>Quantidade de faltas:</td>					
 								<td>Quantidade de aulas dadas:</td>								
 							</tr>
 							<tr>								
@@ -682,14 +682,14 @@
 							</tr>
 							<tr>
 								<td colspan="5">
-									<br><i><center><b>Histórico de Presenças</b></center></i><br>
+									<br><i><center><b>Histórico de presenças</b></center></i><br>
 								</td>
 							</tr>
 							<tr>
-								<td><b>Data da Chamada</b></td>
-								<td><b>Nome da Turma</b></td>
-								<td><b>Nome do Professor</b></b></td>
-								<td><b>Nome do Aluno</td>
+								<td><b>Data da chamada</b></td>
+								<td><b>Nome da turma</b></td>
+								<td><b>Nome do professor</b></b></td>
+								<td><b>Nome do aluno</td>
 								<td><b>Status</b></td>								
 							</tr>							
 							<?php while($val_chamada = mysqli_fetch_assoc($sql_chamada)){ 
@@ -759,13 +759,13 @@
 						<table border="0">
 							<tr>
 								<td colspan="3">
-									<br><i><center><b>Informações Pessoais do Aluno</b></center></i><br>
+									<br><i><center><b>Informações pessoais do aluno</b></center></i><br>
 								</td>
 							</tr>							
 							<tr>
 								<td>Nome:</td>
 								<td>Sexo:</td>
-								<td>Data de Nascimento:</td>
+								<td>Data de nascimento:</td>
 							</tr>
 							<tr>
 								<td>
@@ -808,12 +808,12 @@
 							</tr>
 							<tr>
 								<td colspan="3">
-									<br><i><center><b>Informações Pessoais do Responsável</b></center></i><br>
+									<br><i><center><b>Informações pessoais do responsável</b></center></i><br>
 								</td>
 							</tr>
 							<tr>								
 								<td>Nome:</td>
-								<td>Data de Nascimento:</td>
+								<td>Data de nascimento:</td>
 								<td>Sexo:</td>
 							</tr>
 							<tr>							
@@ -857,9 +857,9 @@
 								</td>
 							</tr>
 							<tr>								
-								<td>E-mail do Responsavel:</td>
-								<td>Telefone do Responsavel:</td>
-								<td>Celular do Responsavel:</td>								
+								<td>E-mail do responsavel:</td>
+								<td>Telefone do responsavel:</td>
+								<td>Celular do responsavel:</td>								
 							</tr>
 							<tr>
 								<td>							
@@ -1053,8 +1053,8 @@
 							</tr>    
 							<tr>
 								<td>Código de inscrição:</td>
-								<td>Nome Completo:</td>
-								<td>Data de Nascimento:</td>
+								<td>Nome completo:</td>
+								<td>Data de nascimento:</td>
 							</tr>
 							<tr>
 								<td>							
@@ -1122,7 +1122,7 @@
 
 				<?php if(@$_GET['etapa'] == '2'){ // aqui abre a etapa 2 ?>			
 		
-					<h1>2ª Etapa: Cadastro de dados do Responsável</h1>
+					<h1>2ª Etapa: Cadastro de dados do responsável</h1>
 		
 					<?php if(isset($_POST['button'])){
 	
@@ -1163,7 +1163,7 @@
 					<form name="form1" method="post" action="">
 						<table width="900" border="0">														
 							<tr>
-								<td><b>Código do Responsável:</b></td>			
+								<td><b>Código do responsável:</b></td>			
 								<td>Nome do responsável:</td>
 								<td>Sexo do responsável:</td>
 							</tr>
@@ -1233,7 +1233,7 @@
 					<table>
 						<tr>
 							<td>
-								<h4>Este(a) Estudante foi cadastrado perfeitamente no sistema!
+								<h4>Este(a) Estudante cadastrado com sucesso!
 								<ul>
 									<li>Fique atento em relação a chamada pois com 3 faltas não justificadas ele será removido do cursinho!</li> 
 								</ul>
@@ -1252,9 +1252,9 @@
 	
 		<?php if(@$_GET['pg'] == 'aluno'){ ?>
 		
-			<a class="a2" href="estudantes.php?pg=cadastra&etapa=1">Cadastrar Alunos</a>
+			<a class="a2" href="estudantes.php?pg=cadastra&etapa=1">Cadastrar alunos</a>
 		
-			<h1>Alunos que estão cadastrados</h1>
+			<h1>Alunos cadastradados</h1>
 
 			<?php $sql_consulta_alunos = "SELECT * FROM inscricao i INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao WHERE i.nome_aluno != '' ORDER BY i.nome_aluno";				 
 			$consulta_alunos = mysqli_query($conexao, $sql_consulta_alunos) or die(mysqli_error($conexao));

@@ -69,8 +69,39 @@
 			$sql_retorno = mysqli_query($conexao, $sql_verifica_chamada) or die(mysqli_error($conexao));
 	
 		if(mysqli_num_rows($sql_retorno) > 0){
-			echo "<h2>Já Foi feita a chamada neste turma na data de hoje!</h2>";
-		}else{						
+			
+			if(isset($POST_['alterar'])){
+				
+			}
+			
+			echo "<h1>Chamada na data de hoje</h1>";?>
+			<form metho="POST">
+				<table width='900'>
+					<tr>
+						<td>Nome</td>
+						<td>Data da Chamada</td>
+						<td>Status</td>					
+						<td>Modificar</td>							
+					</tr>
+						<?php $altera_chamada = "SELECT c.id_aluno, c.id_turma, c.id_professor, c.data_chamada data, c.presenca status, i.nome_aluno nome FROM chamada c INNER JOIN professor p ON p.id_professor = c.id_professor INNER JOIN turma t ON t.id_turma = c.id_turma INNER JOIN aluno a ON a.id_aluno = c.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_inscricao WHERE a.id_aluno <> '' AND c.id_turma = '$cod_turma' AND c.id_professor = '$cod_professor' AND c.data_chamada = '$data_hoje_USA'";
+						$query = mysqli_query($conexao, $altera_chamada) or die (mysqli_error($conexao));
+						while($dados_chamada = mysqli_fetch_assoc($query)){ 
+						$nome = $dados_chamada['nome'];
+						$data = $dados_chamada['data'];
+						$data = date('d/m/Y', strtotime($data));
+						$status =  $dados_chamada['status'];
+						$mascara_status = $status ? "Presente" : "Ausente";
+						$cor = $status ? 'lightgreen' : 'tomato';?>
+							<tr>						
+								<td> <?php echo $nome; ?> </td>
+								<td> <?php echo $data; ?> </td>
+								<td style="background-color: <?php echo $cor;?>"> <?php echo $mascara_status; ?> </td>
+								<td><input type="submit" value="Alterar" title="Modificar o aluno <?php echo $dados_chamada['nome'];?>" name="alterar" class="input" id="button"/></td>
+							</tr>							
+						<?php } ?>					
+				</table>
+			</form>			
+		<?php }else{						
 			
             $sql_resultado_consulta_nome_turma = "SELECT nome_turma, id_turma FROM turma WHERE id_turma = '$cod_turma'";
             $resultado_consulta_nome_turma = mysqli_query($conexao, $sql_resultado_consulta_nome_turma) or die(mysqli_error($conexao));
