@@ -9,6 +9,8 @@
 
 <body>
 	<?php require "topo.php"; ?>
+      
+
 
 <!CADASTRAR TURMAS>
 
@@ -16,7 +18,8 @@
 	</div><!-- caixa_preta -->
 
 	<?php if(@$_GET['pg'] == 'turma'){ ?>
-		<div id="box_curso">
+		<div id="box_curso" title="Cadastre as turmas">
+            <img id="img-info" src="img/info.png" width="30" height="30">
 
 <!VISUALIZAR ALUNOS DA TURMA ESCOLHIDA>
 
@@ -32,19 +35,21 @@
 
  				<br/>
 				<table width="900">
+
 					<tr>
 						<td>
 							<center>Turma:
 								<input type="text" style="width:30px" disabled value="<?php echo $nome_turma;?>"></input>
+
 							</center>
 						</td>
 						<td>
-							<center>Quantidade de alunos:
+							<center>Quantidade de Alunos:
 								<input type="text" style="width:30px" disabled value="<?php echo $quantidade_alunos;?>"></input>
 							</center>
 						</td>
 						<td>
-							<center>Status da turma:
+							<center>Status da Turma:
 								<input type="text" style="width:85px" disabled value="<?php echo $disponivel ? 'Disponível' : 'Indisponível';?>"></input>
 							</center>
 						</td>
@@ -54,8 +59,8 @@
 
 				<table width="900" border="0">
 					<tr>
-						<td width="710"><strong>Nome do aluno</strong></td>
-						<td><strong>Quantidade de faltas</strong></td>
+						<td width="710"><strong>Nome do Aluno</strong></td>
+						<td><strong>Quantidade de Faltas</strong></td>
 					</tr>
 					<?php
 					$select_nome_alunos = "SELECT * FROM inscricao i INNER JOIN aluno a ON i.id_inscricao = a.id_inscricao INNER JOIN matricula m ON m.id_aluno = a.id_aluno WHERE m.id_turma = '$cod_turma'";
@@ -110,11 +115,11 @@
 				<form method="post">
 					<table width="900" border="0">
 						<tr>
-							<td colspan="2"><center><strong><i>Atualizar turma</i></i></strong></center></td>
+							<td colspan="2"><center><strong><i>Atualizar a Turma</i></i></strong></center></td>
 						</tr>
     					<tr>
       						<td width="134" >
-								Nome da turma
+								Nome da Turma
 							</td>
     					</tr>
     					<tr>
@@ -124,7 +129,7 @@
 						</tr>
 						<tr>
       						<td width="134">
-								Quantidade de alunos
+								Quantidade de Alunos
 							</td>
     					</tr>
     					<tr>
@@ -150,13 +155,13 @@
 <!>
 
 			<br/><br/>
- 			<a class="a2" href="cursos_e_disciplinas.php?pg=turma&amp;cadastra=sim">Cadastrar turma</a>
+ 			<a class="a2" href="cursos_e_disciplinas.php?pg=turma&amp;cadastra=sim">Cadastrar Turma</a>
 
 <! CADASTRANDO NOVAS TURMAS >
 
 			<?php if(@$_GET['cadastra'] == 'sim'){?>
  				<br/><br/>
- 				<h1>Cadastrar turma</h1>
+ 				<h1>Cadastrar Turma</h1>
 
 				<?php if(isset($_POST['cadastra_turma'])){
 
@@ -182,27 +187,27 @@
   					<table width="900" border="0">
     					<tr>
       						<td width="134">
-								Nome da turma
+								Nome da Turma
 							</td>
     					</tr>
     					<tr>
       						<td>
-								<input type="text" name="nome_turma" id="textfield">
+								<input type="text" title="Insira o nome da turma" name="nome_turma" id="textfield">
 							</td>
 						</tr>
 						<tr>
       						<td width="134">
-								Quantidade de alunos
+								Quantidade de Alunos
 							</td>
     					</tr>
     					<tr>
       						<td>
-								<input type="number" name="qtde_alunos" id="textfield" min="1">
+								<input type="number" title="Insira a quantidade dos alunos" name="qtde_alunos" id="textfield" min="1">
 							</td>
 						</tr>
 						<td>
       						<td>
-								<input class="input" type="submit" name="cadastra_turma" id="button" value="Cadastrar">
+								<input class="input" type="submit" title="Cadastre a turma" name="cadastra_turma" id="button" value="Cadastrar">
 							</td>
     					</tr>
   					</table>
@@ -224,17 +229,17 @@
 			else
 			{ ?>
 				<br/><br/>
-				<h1>Turmas</h1>
-				<table width="900" border="0">
+				<center><h1>Turmas</h1></center>
+				<table width="600" border="0">
 					<tr>
 						<td><center><strong>Turma</strong></center></td>
-						<td><center><strong>Total de alunos nesta turma</strong></center></td>
+						<td><center><strong>Total de Alunos nesta Turma</strong></center></td>
 						<td><center><strong>Modificar</strong></center></td>
 					</tr>
 						<?php while($resultado_consulta_turma_1 = mysqli_fetch_assoc($resultado_consulta_turma)){ ?>
 							<tr>
-								<td><center><?php echo $nome_turma = $resultado_consulta_turma_1['nome_turma']; ?></center></td>
-								<td><center><?php $qtde_alunos = $resultado_consulta_turma_1['quantidade_alunos'];
+								<td style="color: #A70A0C"><center><?php echo $nome_turma = $resultado_consulta_turma_1['nome_turma']; ?></center></td>
+								<td style="color: #A70A0C"><center><?php $qtde_alunos = $resultado_consulta_turma_1['quantidade_alunos'];
 
 									$cod_turma = $resultado_consulta_turma_1['id_turma'];
 
@@ -244,7 +249,7 @@
 
 									$qtde_alunos_matriculados = mysqli_num_rows($resultado_consulta_qtde_alunos_matriculados);
 									echo $qtde_alunos_matriculados . " | " . $qtde_alunos;?></center></td>
-								<td>
+								<td style="color: #A00C0E">
 									<center>
 										<a href="cursos_e_disciplinas.php?pg=turma&amp;op=visualizar&turma=<?php echo $cod_turma; ?>" ><img title="Visualizar Turma <?php echo $nome_turma; ?>" src="img/lupa_turma.png" width="18" height="18" border="0"></a>
 										<a href="cursos_e_disciplinas.php?pg=turma&amp;op=atualizar&turma=<?php echo $cod_turma; ?>"><img title="Atualizar Turma <?php echo $nome_turma; ?>" src="img/editar.png" width="18" height="18" border="0"></a>
@@ -265,7 +270,7 @@
 
 	<?php if(@$_GET['pg'] == 'matricula'){ ?>
 
-		<div id="box_disciplinas">
+		<div id="box_disciplinas" title="Matricule os alunos">
 			<a class="a2" href="cursos_e_disciplinas.php?pg=matricula&amp;cadastra=sim">Matricular Alunos</a>
 
 <!Editando a Matricula>
@@ -298,11 +303,11 @@
 				<form method="post">
 					<table width="900" border="0">
 						<tr>
-							<td colspan="2"><center><strong><i>Atualizar turma</i></i></strong></center></td>
+							<td colspan="2"><center><strong><i>Atualizar a Turma</i></i></strong></center></td>
 						</tr>
     					<tr>
       						<td width="134" >
-								Nome da turma
+								Nome da Turma
 							</td>
     					</tr>
     					<tr>
@@ -312,7 +317,7 @@
 						</tr>
 						<tr>
       						<td width="134">
-								Quantidade de alunos
+								Quantidade de Alunos
 							</td>
     					</tr>
     					<tr>
@@ -389,7 +394,7 @@
   					<table width="900" border="0">
     					<tr>
 					 		<td width="134">
-								Nome completo ou código do aluno:
+								Nome Completo ou Código do Aluno:
 							</td>
 					  		<td width="213">
 								Turmas:
@@ -397,10 +402,10 @@
 						</tr>
 						<tr>
 					  		<td>
-      							<input type="text" name="nome_aluno" id="textfield" maxlength="120">
+      							<input type="text" title="Insira o nome ou o código do aluno" name="nome_aluno" id="textfield" maxlength="120">
 	  						</td>
       						<td>
-      							<select name="turma">
+      							<select name="turma" title="Selecione uma turma para o aluno">
       								<?php $sql_resultado_consulta_turma_3 = "SELECT * FROM turma WHERE nome_turma != ''";
 
 	  								$resultado_consulta_turma_3 = mysqli_query($conexao, $sql_resultado_consulta_turma_3) or die(mysqli_error($conexao));
@@ -414,7 +419,7 @@
       							</select>
       						</td>
       						<td width="126">
-								<input class="input" type="submit" name="cadastra" id="button" value="Matricular">
+								<input class="input" type="submit" title="Matricule" name="cadastra" id="button" value="Matricular">
 							</td>
     					</tr>
   					</table>
@@ -427,7 +432,7 @@
 			<br/><br/>
 
 			<h1>
-				<center>Matriculados </center>
+				MATRICULAS
 			</h1>
 
 			<?php $sql_consulta_matriculas = "SELECT * FROM matricula m INNER JOIN aluno a ON a.id_aluno = m.id_aluno INNER JOIN inscricao i ON i.id_inscricao = a.id_inscricao INNER JOIN turma t ON t.id_turma = m.id_turma ORDER BY t.nome_turma ASC";

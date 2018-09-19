@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div id="logo">
-		<img src="img/logoEtec.png" />
+		<img src="img/logoEtec.png" title="Logo da pré Etec" />
 	</div>
 	
 	<div id="caixa_login">
@@ -70,7 +70,7 @@
 		  		</tr>
 		  		<tr>
 		   			<td>
-						<input type="text" name="login" />
+						<input type="text" title="Insira o nome do usuário" name="login" />
 					</td>
 		  		</tr>
 		   		<tr>
@@ -80,12 +80,12 @@
 		  		</tr>
 		  		<tr>
 		   			<td>
-						<input type="password" name="password" />
+						<input type="password" title="Insira sua senha" name="password" />
 					</td>
 		  		</tr>
 		  		<tr>
 		   			<td>
-						<input class="input" type="submit" name="button" value="Entrar" />
+						<input class="input" type="submit" title="Entre no sistema" name="button" value="Entrar" />
 					</td>
 		  		</tr>
 			</table>
